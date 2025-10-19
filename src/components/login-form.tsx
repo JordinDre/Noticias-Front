@@ -63,18 +63,25 @@ export function LoginForm({
       .then((response) => response.json())
       .then((result) => {
         if (result.errors) {
-          Object.entries(result.errors).forEach(([key, value]) => {
-            toast.error(value[0]);
+          Object.entries(result.errors).forEach(([, value]) => {
+            toast.error((value as string[])[0]);
           });
-        } else if (result.message) {
+        } else if (result.email_verified === false) {
+          toast.error(result.message || "Por favor verifica tu correo electrónico antes de iniciar sesión.");
+          // Redirigir a una página de verificación pendiente si lo deseas
+          // navigate("/email-verification-pending");
+        } else if (result.message && !result.access_token) {
           toast.error(result.message);
-        } else {
-          toast.success("User logged in successfully");
+        } else if (result.access_token) {
+          toast.success("Inicio de sesión exitoso");
           localStorage.setItem("token", result.access_token);
           navigate("/");
         }
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        toast.error("Error al iniciar sesión");
+      });
   };
 
   const token = localStorage.getItem("token");
@@ -109,15 +116,15 @@ export function LoginForm({
                     />
                   </Field>
                   <Field>
-                    {/* <div className="flex items-center">
+                    <div className="flex items-center">
                       <FieldLabel htmlFor="password">Password</FieldLabel>
-                      <a
-                        href="#"
+                      <Link
+                        to="/password/forgot"
                         className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                       >
-                        Forgot your password?
-                      </a>
-                    </div> */}
+                        ¿Olvidaste tu contraseña?
+                      </Link>
+                    </div>
                     <Input
                       id="password"
                       type="password"
@@ -137,6 +144,12 @@ export function LoginForm({
                     <FieldDescription className="text-center">
                       Don&apos;t have an account?{" "}
                       <Link to="/register">Sign up</Link>
+                    </FieldDescription>
+                    <FieldDescription className="text-center text-xs">
+                      ¿No recibiste el email de verificación?{" "}
+                      <Link to="/email/resend" className="text-blue-600 hover:underline">
+                        Reenviar
+                      </Link>
                     </FieldDescription>
                   </Field>
                 </FieldGroup>

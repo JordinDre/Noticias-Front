@@ -58,13 +58,18 @@ export function RegisterForm({
       .then((response) => response.json())
       .then((result) => {
         if (result.errors) {
-          Object.entries(result.errors).forEach(([key, value]) => {
-            toast.error(value[0]);
+          Object.entries(result.errors).forEach(([, value]) => {
+            toast.error((value as string[])[0]);
           });
-        } else {
-          toast.success("User registered successfully");
+        } else if (result.data) {
+          toast.success("¡Registro exitoso! Por favor verifica tu correo electrónico.");
+          toast.info("Hemos enviado un enlace de verificación a tu correo.");
           navigate("/login");
         }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Error al registrar usuario");
       });
   };
 
