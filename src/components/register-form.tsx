@@ -32,14 +32,11 @@ export function RegisterForm({
   ...props
 }: React.ComponentProps<"div">) {
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-  } = useForm<Inputs>();
+  const { register, handleSubmit } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
+    
     const raw = JSON.stringify({
       name: data.name,
       email: data.email,
@@ -52,6 +49,7 @@ export function RegisterForm({
       headers: myHeaders,
       body: raw,
     };
+
 
     fetch(
       `${import.meta.env.VITE_API_URL}/auth/register`,
@@ -67,77 +65,87 @@ export function RegisterForm({
           toast.success("User registered successfully");
           navigate("/login");
         }
-      })
+      });
   };
+
+  const token = localStorage.getItem("token");
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <Toaster />
-        <CardHeader>
-          <CardTitle>Register to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to register to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="name">Name</FieldLabel>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="John Doe"
-                  required
-                  {...register("name")}
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  {...register("email")}
-                />
-              </Field>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  {...register("password")}
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="password_confirmation">
-                  Confirm Password
-                </FieldLabel>
-                <Input
-                  id="password_confirmation"
-                  type="password"
-                  required
-                  {...register("password_confirmation")}
-                />
-              </Field>
-              <Field>
-                <Button type="submit">Register</Button>
-                <Button variant="outline" type="button">
+      {token ? (
+        <div className="text-center text-sm text-gray-600">
+          You are already logged in
+        </div>
+      ) : (
+        <>
+          <Card>
+            <Toaster />
+            <CardHeader>
+              <CardTitle>Register to your account</CardTitle>
+              <CardDescription>
+                Enter your email below to register to your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel htmlFor="name">Name</FieldLabel>
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="John Doe"
+                      required
+                      {...register("name")}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="email">Email</FieldLabel>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="m@example.com"
+                      required
+                      {...register("email")}
+                    />
+                  </Field>
+                  <Field>
+                    <div className="flex items-center">
+                      <FieldLabel htmlFor="password">Password</FieldLabel>
+                    </div>
+                    <Input
+                      id="password"
+                      type="password"
+                      required
+                      {...register("password")}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="password_confirmation">
+                      Confirm Password
+                    </FieldLabel>
+                    <Input
+                      id="password_confirmation"
+                      type="password"
+                      required
+                      {...register("password_confirmation")}
+                    />
+                  </Field>
+                  <Field>
+                    <Button type="submit">Register</Button>
+                    {/* <Button variant="outline" type="button">
                   Register with Google
-                </Button>
-                <FieldDescription className="text-center">
-                  Already have an account? <Link to="/login">Login</Link>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
+                </Button> */}
+                    <FieldDescription className="text-center">
+                      Already have an account? <Link to="/login">Login</Link>
+                    </FieldDescription>
+                  </Field>
+                </FieldGroup>
+              </form>
+            </CardContent>
+          </Card>
+        </>
+      )}
     </div>
   );
 }

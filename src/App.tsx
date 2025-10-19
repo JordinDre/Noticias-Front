@@ -46,7 +46,9 @@ function App() {
 
   function fetchNoticias(category: string, page: number, sizePage: number) {
     fetch(
-      `${import.meta.env.VITE_API_URL}/everything?q=${category}&apiKey=${import.meta.env.VITE_TOKEN_API_NEWS}&page=${page}&pageSize=${sizePage}`
+      `${import.meta.env.VITE_API_NEWS_URL}/everything?q=${category}&apiKey=${
+        import.meta.env.VITE_API_NEWS_TOKEN
+      }&page=${page}&pageSize=${sizePage}`
     )
       .then((response) => response.json())
       .then((data) => setNoticias(data.articles));
@@ -66,7 +68,10 @@ function App() {
       headers: myHeaders,
     };
 
-    fetch(`${import.meta.env.VITE_API_URL}/auth/me`, requestOptions as RequestInit)
+    fetch(
+      `${import.meta.env.VITE_API_URL}/auth/me`,
+      requestOptions as RequestInit
+    )
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -110,9 +115,12 @@ function App() {
             key={noticia.title}
             className="border shadow-sm rounded-lg p-4 bg-white flex flex-col gap-2"
           >
-            <h2 className="text-lg font-bold">{noticia.title}</h2>
-            <p>{noticia.description}</p>
-            <Link to={`/noticia/${noticia.title.toLowerCase().replace(/ /g, '-')}`}>
+            <Link
+              className="hover:text-blue-700 hover:underline cursor-pointer transition-all duration-300"
+              to={`/noticia/${noticia.title.toLowerCase().replace(/ /g, "-")}`}
+            >
+              <h2 className="text-lg font-bold hover:text-blue-700 hover:underline cursor-pointer transition-all duration-300">{noticia.title}</h2>
+              <p>{noticia.description}</p>
               <img src={noticia.urlToImage} alt={noticia.title} />
             </Link>
             <div>
@@ -123,7 +131,7 @@ function App() {
                   rel="noopener noreferrer"
                   className="hover:bg-blue-700 bg-blue-500 text-white px-4 py-2 rounded-md"
                 >
-                  Ver noticia
+                  Ver noticia en la web
                 </a>
               )}
             </div>

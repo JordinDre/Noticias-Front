@@ -18,7 +18,7 @@ export default function Noticia() {
 
   function fetchNoticia(title: string) {
     fetch(
-      `${import.meta.env.VITE_API_URL}/everything?q=${title}&apiKey=${import.meta.env.VITE_TOKEN_API_NEWS}`
+      `${import.meta.env.VITE_API_NEWS_URL}/everything?q=${title}&apiKey=${import.meta.env.VITE_API_NEWS_TOKEN}`
     )
       .then((response) => response.json())
       .then((data) => setNoticia(data.articles[0]));

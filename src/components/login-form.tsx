@@ -32,6 +32,14 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const navigate = useNavigate();
+
+  const handleGoogle = () => {
+    const backendUrl =
+      import.meta.env.VITE_API_URL?.replace("/api", "") ||
+      "http://localhost:8000";
+    window.location.href = `${backendUrl}/oauth/google/redirect`;
+  };
+
   const { register, handleSubmit } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const myHeaders = new Headers();
@@ -48,7 +56,10 @@ export function LoginForm({
       body: raw,
     };
 
-    fetch(`${import.meta.env.VITE_API_URL}/auth/login`, requestOptions as RequestInit)
+    fetch(
+      `${import.meta.env.VITE_API_URL}/auth/login`,
+      requestOptions as RequestInit
+    )
       .then((response) => response.json())
       .then((result) => {
         if (result.errors) {
@@ -66,59 +77,74 @@ export function LoginForm({
       .catch((error) => console.error(error));
   };
 
+  const token = localStorage.getItem("token");
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <Toaster />
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  {...register("email")}
-                />
-              </Field>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  {...register("password")}
-                />
-              </Field>
-              <Field>
-                <Button type="submit">Login</Button>
-                <Button variant="outline" type="button">
-                  Login with Google
-                </Button>
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account? <Link to="/register">Sign up</Link>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
+      {token ? (
+        <div className="text-center text-sm text-gray-600">
+          You are already logged in
+        </div>
+      ) : (
+        <>
+          <Card>
+            <Toaster />
+            <CardHeader>
+              <CardTitle>Login to your account</CardTitle>
+              <CardDescription>
+                Enter your email below to login to your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel htmlFor="email">Email</FieldLabel>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="m@example.com"
+                      required
+                      {...register("email")}
+                    />
+                  </Field>
+                  <Field>
+                    {/* <div className="flex items-center">
+                      <FieldLabel htmlFor="password">Password</FieldLabel>
+                      <a
+                        href="#"
+                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                      >
+                        Forgot your password?
+                      </a>
+                    </div> */}
+                    <Input
+                      id="password"
+                      type="password"
+                      required
+                      {...register("password")}
+                    />
+                  </Field>
+                  <Field>
+                    <Button type="submit">Login</Button>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      onClick={handleGoogle}
+                    >
+                      Login with Google
+                    </Button>
+                    <FieldDescription className="text-center">
+                      Don&apos;t have an account?{" "}
+                      <Link to="/register">Sign up</Link>
+                    </FieldDescription>
+                  </Field>
+                </FieldGroup>
+              </form>
+            </CardContent>
+          </Card>
+        </>
+      )}
     </div>
   );
 }

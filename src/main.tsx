@@ -6,6 +6,7 @@ import App from './App.tsx'
 import Login from './pages/auth/login.tsx'
 import Register from './pages/auth/register.tsx';
 import Noticia from './pages/Noticia.tsx';
+import OauthCallback from './pages/auth/oauth.tsx';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
   {
     path: "/noticia/:title",
     element: <Noticia />,
+  },
+  {
+    path: "/oauth/callback",
+    element: <OauthCallback />,
   },
 ]);
 

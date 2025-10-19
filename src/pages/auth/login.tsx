@@ -2,6 +2,8 @@ import { LoginForm } from "@/components/login-form"
 import Navbar from "@/components/navbar"
 
 export default function Login() {
+
+
   return (
     <>
       <Navbar />
