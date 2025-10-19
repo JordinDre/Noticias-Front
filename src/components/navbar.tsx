@@ -18,7 +18,7 @@ function Navbar() {
         headers: myHeaders,
       };
       
-      fetch("http://noticias.test/api/auth/me", requestOptions as RequestInit)
+      fetch(`${import.meta.env.VITE_API_URL}/auth/me`, requestOptions as RequestInit)
         .then((response) => response.json())
         .then((result) => {
           console.log(result);
@@ -40,7 +40,7 @@ function Navbar() {
           <button onClick={() => {
             localStorage.removeItem("token");
 
-            fetch("http://noticias.test/api/auth/logout", {
+            fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
               method: "POST",
               headers: {
                 "Authorization": `Bearer ${token}`,

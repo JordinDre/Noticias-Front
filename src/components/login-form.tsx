@@ -48,7 +48,7 @@ export function LoginForm({
       body: raw,
     };
 
-    fetch("http://noticias.test/api/auth/login", requestOptions as RequestInit)
+    fetch(`${import.meta.env.VITE_API_URL}/auth/login`, requestOptions as RequestInit)
       .then((response) => response.json())
       .then((result) => {
         if (result.errors) {

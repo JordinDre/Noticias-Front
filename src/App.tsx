@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "./components/navbar";
+import { Link } from "react-router-dom";
 
 interface NoticiaType {
   id: number;
@@ -45,7 +46,7 @@ function App() {
 
   function fetchNoticias(category: string, page: number, sizePage: number) {
     fetch(
-      `https://newsapi.org/v2/everything?q=${category}&apiKey=a727f03520e04b7e8348722681d28d65&page=${page}&pageSize=${sizePage}`
+      `${import.meta.env.VITE_API_URL}/everything?q=${category}&apiKey=${import.meta.env.VITE_TOKEN_API_NEWS}&page=${page}&pageSize=${sizePage}`
     )
       .then((response) => response.json())
       .then((data) => setNoticias(data.articles));
@@ -54,7 +55,7 @@ function App() {
   useEffect(() => {
     fetchNoticias("bitcoin", 1, 10);
     fetchMe();
-  }, [token, autenticado]);
+  }, []);
 
   function fetchMe() {
     const myHeaders = new Headers();
@@ -65,7 +66,7 @@ function App() {
       headers: myHeaders,
     };
 
-    fetch("http://noticias.test/api/auth/me", requestOptions as RequestInit)
+    fetch(`${import.meta.env.VITE_API_URL}/auth/me`, requestOptions as RequestInit)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -85,7 +86,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <nav className="flex justify-between items-center p-4">
+      <nav className="justify-center text-center md:flex md:justify-between items-center p-4">
         {categories.map((category) => (
           <button
             key={category.name}
@@ -103,7 +104,7 @@ function App() {
       <h1 className="text-4xl font-bold text-center my-5 uppercase">
         Noticias de {category}
       </h1>
-      <div className="grid grid-cols-3 gap-4 shadow-sm rounded-lg p-4 border bg-gray-100 max-w-7xl mx-auto">
+      <div className=" grid md:grid-cols-3 gap-4 shadow-sm rounded-lg p-4 border bg-gray-100 max-w-7xl mx-auto">
         {noticias.map((noticia: NoticiaType) => (
           <div
             key={noticia.title}
@@ -111,7 +112,9 @@ function App() {
           >
             <h2 className="text-lg font-bold">{noticia.title}</h2>
             <p>{noticia.description}</p>
-            <img src={noticia.urlToImage} alt={noticia.title} />
+            <Link to={`/noticia/${noticia.title.toLowerCase().replace(/ /g, '-')}`}>
+              <img src={noticia.urlToImage} alt={noticia.title} />
+            </Link>
             <div>
               {autenticado && (
                 <a

@@ -54,7 +54,7 @@ export function RegisterForm({
     };
 
     fetch(
-      "http://noticias.test/api/auth/register",
+      `${import.meta.env.VITE_API_URL}/auth/register`,
       requestOptions as RequestInit
     )
       .then((response) => response.json())
