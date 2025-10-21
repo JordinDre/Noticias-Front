@@ -117,7 +117,7 @@ function App() {
           >
             <Link
               className="hover:text-blue-700 hover:underline cursor-pointer transition-all duration-300"
-              to={`/noticia/${noticia.title.toLowerCase().replace(/ /g, "-")}`}
+              to={`/noticia/${category}/${noticia.title.toLowerCase().replace(/ /g, "-")}`}
             >
               <h2 className="text-lg font-bold hover:text-blue-700 hover:underline cursor-pointer transition-all duration-300">{noticia.title}</h2>
               <p>{noticia.description}</p>
